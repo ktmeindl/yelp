@@ -16,13 +16,8 @@ object Main {
 
 
   def main(args: Array[String]): Unit = {
-    try {
       val tarFile = args.length match {
-        case 0 => {
-          //TODO throw exception
-          logger.warn("Missing program argument. Usage: <path to tar-file>")
-          "file:///" + new File("data/yelp_dataset_challenge_round9.tar").getAbsolutePath
-        }
+        case 0 => throw new Exception("Missing program argument. Usage: <path to tar-file>")
         case _ => args(0)
       }
 
@@ -35,11 +30,8 @@ object Main {
         .getOrCreate()
       logger.debug("SparkSession initialized")
 
-      DataStorage.untarAndStoreInCassandra(props, spark, tarFile)
+      TarProcessor.untarAndStoreYelpData(props, spark, tarFile)
 
-    } finally {
-      println("done")
-    }
   }
 
 

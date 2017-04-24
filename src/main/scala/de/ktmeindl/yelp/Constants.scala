@@ -4,10 +4,42 @@ object Constants {
 
   val PROP_FILE               = "yelp.properties"
 
+  //// some constants
+  // naming of instances
+  val CHECKIN                 = "checkin"
+  val REVIEW                  = "review"
+  val BUSINESS                = "business"
+  val TIP                     = "tip"
+  val USER                    = "user"
+
+  // file names for analysis
+  val FILE_CHECKIN            = "yelp_academic_dataset_checkin.json"
+  val FILE_BUSINESS           = "yelp_academic_dataset_business.json"
+  val FILE_REVIEW             = "yelp_academic_dataset_review.json"
+  val FILE_TIP                = "yelp_academic_dataset_tip.json"
+  val FILE_USER               = "yelp_academic_dataset_user.json"
+
+
+  // column names in yelp data
+  val COL_BUSINESS_ID         = "business_id"
+  val COL_REVIEW_ID           = "review_id"
+  val COL_USER_ID             = "user_id"
+  val COL_TIME                = "time"
+  val COL_UUID : String       = "key_uuid"
+
+
+  // possible storage types
+  val TYPE_CASSANDRA          = "cassandra"
+  val TYPE_FILE               = "file"
+  val TYPE_HDFS               = "hdfs"
+
+
   //// properties in PROP_FILE
-  val CASSANDRA_HOSTS         = "cassandra.hosts"
   val SHOULD_UNTAR            = "should.untar.files"
-  val DATA_DIR                = "untared.files.dir"
+  val DATA_DIR                = "untarred.files.dir"
+  val STORAGE_TYPE            = "storage.type"
+  val CASSANDRA_HOSTS         = "cassandra.hosts"
+  val HDFS_DIR                = "hdfs.dir"
 
   // cassandra keyspace and name
   val C_KEYSPACE              = "cassandra.keyspace"
@@ -17,26 +49,12 @@ object Constants {
   val C_TIP                   = "cassandra.table.tip"
   val C_USER                  = "cassandra.table.user"
 
+  //// default values
   // default cassandra keyspace and table names
   val C_KEYSPACE_DEFAULT      = "yelp_dataset"
-  val C_CHECKIN_DEFAULT       = "checkin"
-  val C_REVIEW_DEFAULT        = "review"
-  val C_BUSINESS_DEFAULT      = "business"
-  val C_TIP_DEFAULT           = "tip"
-  val C_USER_DEFAULT          = "user"
-
-  // file names for analysis
-  val CHECKIN_FILE            = "yelp_academic_dataset_checkin.json"
-  val BUSINESS_FILE           = "yelp_academic_dataset_business.json"
-  val REVIEW_FILE             = "yelp_academic_dataset_review.json"
-  val TIP_FILE                = "yelp_academic_dataset_tip.json"
-  val USER_FILE               = "yelp_academic_dataset_user.json"
-
-
-  val COL_BUSINESS_ID         = "business_id"
-  val COL_REVIEW_ID           = "review_id"
-  val COL_USER_ID             = "user_id"
-  val COL_TIME                = "time"
-  val COL_UUID : String       = "key_uuid"
-
+  val C_CHECKIN_DEFAULT       = CHECKIN
+  val C_REVIEW_DEFAULT        = REVIEW
+  val C_BUSINESS_DEFAULT      = BUSINESS
+  val C_TIP_DEFAULT           = TIP
+  val C_USER_DEFAULT          = USER
 }
