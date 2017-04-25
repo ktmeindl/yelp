@@ -9,6 +9,7 @@ ADD . /yelp
 RUN sudo apt-get install dos2unix
 RUN dos2unix /yelp/bin/*
 RUN dos2unix /yelp/conf/*
+RUN mkdir /yelp/data
 
 # Copy Spark config
 RUN cp /yelp/conf/spark-defaults.conf /opt/spark/dist/conf
