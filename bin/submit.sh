@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
-
-## Expecting env var: YELP_MASTER=< Master of the form: mesos://<host>:5050 >
 ## Input parameter: <path to tar-file containing yelp data>
-
-if [ -z "${YELP_MASTER}" ]; then
-    echo "Mandatory environment variable not set - please specify Spark Master via: YELP_MASTER=mesos://<host>:5050"
-    exit 1
-fi
 
 TAR_FILE=$1
 if [ -z "${TAR_FILE}" ]; then
@@ -16,8 +9,26 @@ fi
 
 YELP_DRIVER_JAVA_OPTIONS="-Dlog4j.configuration=file:/yelp/conf/log4j.properties -Dyelp.properties=file:/yelp/conf/yelp.properties"
 
-/opt/spark/dist/bin/spark-submit \
-    --master ${YELP_MASTER} \
+echo "/opt/spark/dist/bin/spark-submit \
+    --master mesos://leader.mesos:5050 \
     --class de.ktmeindl.yelp.Main \
     --driver-java-options "${YELP_DRIVER_JAVA_OPTIONS}" \
+    --executor-memory 1g \
+    --executor-cores 2 \
+    --conf spark.mesos.coarse=true \
+    --conf spark.cores.max=4 \
+    --conf spark.mesos.executor.docker.image=ktmeindl/yelp:1.0.0 \
+    /yelp/lib/yelp-1.0.0.jar ${TAR_FILE}"
+
+/opt/spark/dist/bin/spark-submit \
+    --master mesos://leader.mesos:5050 \
+    --class de.ktmeindl.yelp.Main \
+    --driver-java-options "${YELP_DRIVER_JAVA_OPTIONS}" \
+    --executor-memory 1g \
+    --executor-cores 2 \
+    --conf spark.mesos.coarse=true \
+    --conf spark.cores.max=4 \
+    --conf spark.mesos.executor.docker.image=ktmeindl/yelp:1.0.0 \
     /yelp/lib/yelp-1.0.0.jar ${TAR_FILE}
+
+
