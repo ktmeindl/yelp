@@ -33,6 +33,9 @@ function copy_elements {
     ## Providing some extra libraries required for s3
     cp ~/.m2/repository/net/java/dev/jets3t/jets3t/0.9.4/jets3t-0.9.4.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/org/apache/hadoop/hadoop-aws/2.6.0/hadoop-aws-2.6.0.jar $(dirname $0)/../docker/lib
+    cp ~/.m2/repository/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar $(dirname $0)/../docker/lib
+
+
 }
 
 function build_docker {
