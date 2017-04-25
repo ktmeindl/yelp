@@ -15,7 +15,12 @@ class CassandraClient(props: PropertiesConfiguration){
 
   private val addresses = new util.ArrayList[InetSocketAddress]()
   props.getStringArray(CASSANDRA_HOSTS)
-    .map(x => new InetSocketAddress(x.split(':')(0), x.split(':')(1).toInt))
+    .map(x => {
+      val splits = x.split(':')
+      val host = splits.take(splits.length-1).mkString(":")
+      val port = splits(splits.length-1).toInt
+      new InetSocketAddress(host, port)
+    })
     .foreach(addresses.add)
 
   private val cluster = Cluster.builder()

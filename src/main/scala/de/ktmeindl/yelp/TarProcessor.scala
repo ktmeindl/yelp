@@ -11,6 +11,8 @@ import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.slf4j.LoggerFactory
 
+import scala.util.Try
+
 
 object TarProcessor {
 
@@ -21,9 +23,9 @@ object TarProcessor {
 
   def untarAndStoreYelpData(props: PropertiesConfiguration, spark: SparkSession, tarFile: String): Unit = {
 
-    val dataDir = props.getString(DATA_DIR, null) match {
-      case s: String => new File(s)
-      case _ => {
+    val dataDir = Try{props.getString(DATA_DIR)}.toOption match {
+      case Some(s) => new File(s)
+      case None => {
         isTmpDir = true
         val tmpDirPath = Files.createTempDirectory(UUID.randomUUID().toString).toFile
         logger.debug(s"Working in tmp directory ${tmpDirPath.getAbsolutePath}")

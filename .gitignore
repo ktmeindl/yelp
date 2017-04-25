@@ -1,0 +1,10 @@
+target/
+*.iml
+.idea/
+data/
+Test.scala
+log/*
+*.log
+yelp.properties
+docker/conf
+docker/lib

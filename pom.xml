@@ -6,7 +6,7 @@
 
     <groupId>de.ktmeindl</groupId>
     <artifactId>yelp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
 
@@ -25,6 +25,8 @@
         <spark.version>2.1.0</spark.version>
         <spark.connector.version>2.0.1</spark.connector.version>
         <cassandra.driver.version>3.0.0</cassandra.driver.version>
+        <hadoop.version>2.6.0</hadoop.version>
+        <jackson.version>2.6.5</jackson.version>
 
     </properties>
 
@@ -91,7 +93,6 @@
                 <configuration>
                     <includes>
                         <include>**/*Test.*</include>
-                        <include>**/*Suite.*</include>
                     </includes>
                     <failIfNoTests>false</failIfNoTests>
                     <skipTests>true</skipTests>
@@ -133,6 +134,36 @@
             <artifactId>cassandra-driver-core</artifactId>
             <version>${cassandra.driver.version}</version>
         </dependency>
+
+        <!-- Classpath adaptions for read/write with S3 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jets3t</groupId>
+            <artifactId>jets3t</artifactId>
+            <version>0.9.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-aws</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
+
+        <!-- Spark dependencies -->
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.11</artifactId>
@@ -144,12 +175,14 @@
             <version>${spark.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+        <!-- For tar file handling -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.4</version>
         </dependency>
+
+
 
     </dependencies>
 </project>

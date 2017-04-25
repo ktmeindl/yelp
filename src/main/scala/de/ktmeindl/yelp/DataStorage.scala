@@ -43,7 +43,7 @@ object DataStorage {
   def getInstancesFromProps(props: PropertiesConfiguration) : Seq[DataInstance] = {
     props.getString(STORAGE_TYPE).toLowerCase match {
       case TYPE_CASSANDRA   => getCassandraInstances(props)
-      case TYPE_HDFS        => getHdfsInstances( props.getString(HDFS_DIR))
+      case TYPE_HDFS        => getHdfsInstances(props.getString(HDFS_DIR))
       case TYPE_FILE        => getLocalInstances(new File(props.getString(DATA_DIR)))
     }
   }
@@ -124,8 +124,6 @@ object DataStorage {
 
   def readLocalFile(spark: SparkSession, dataDir: File, file: String): DataFrame = {
     readJson(spark, "file:///" + new File(dataDir, file).getAbsolutePath)
-      //DEBUG TODO: remove
-      .limit(1000)
   }
 
 

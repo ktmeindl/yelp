@@ -49,6 +49,11 @@ object Constants {
   val C_TIP                   = "cassandra.table.tip"
   val C_USER                  = "cassandra.table.user"
 
+  // in case of s3 data storage
+  val S3_ENDPOINT             = "s3.aws.endpoint"
+  val S3_ID                   = "s3.aws.access.id"
+  val S3_KEY                  = "s3.aws.access.key"
+
   //// default values
   // default cassandra keyspace and table names
   val C_KEYSPACE_DEFAULT      = "yelp_dataset"
@@ -57,4 +62,7 @@ object Constants {
   val C_BUSINESS_DEFAULT      = BUSINESS
   val C_TIP_DEFAULT           = TIP
   val C_USER_DEFAULT          = USER
+
+
+
 }
