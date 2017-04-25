@@ -27,6 +27,7 @@
         <cassandra.driver.version>3.0.0</cassandra.driver.version>
         <hadoop.version>2.6.0</hadoop.version>
         <jackson.version>2.6.5</jackson.version>
+        <jets3t.version>0.9.4</jets3t.version>
 
     </properties>
 
@@ -149,7 +150,7 @@
         <dependency>
             <groupId>net.java.dev.jets3t</groupId>
             <artifactId>jets3t</artifactId>
-            <version>0.9.4</version>
+            <version>${jets3t.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>

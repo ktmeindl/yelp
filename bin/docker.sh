@@ -20,13 +20,19 @@ function copy_elements {
     mkdir $(dirname $0)/../docker/bin
 
 
+    # Configuration
     cp $(dirname $0)/../conf/yelp-defaults.properties $(dirname $0)/../docker/conf/yelp.properties
     cp $(dirname $0)/../conf/log4j.properties $(dirname $0)/../docker/conf
     cp $(dirname $0)/../conf/spark-defaults.conf $(dirname $0)/../docker/conf
 
-    cp $(dirname $0)/../target/yelp-1.0.0.jar $(dirname $0)/../docker/lib
-
+    # Scripts
     cp $(dirname $0)/submit.sh $(dirname $0)/../docker/bin
+
+    # Libraries
+    cp $(dirname $0)/../target/yelp-1.0.0.jar $(dirname $0)/../docker/lib
+    ## Providing some extra libraries required for s3
+    cp ~/.m2/repository/net/java/dev/jets3t/jets3t/0.9.4/jets3t-0.9.4.jar $(dirname $0)/../docker/lib
+    cp ~/.m2/repository/org/apache/hadoop/hadoop-aws/2.6.0/hadoop-aws-2.6.0.jar $(dirname $0)/../docker/lib
 }
 
 function build_docker {
