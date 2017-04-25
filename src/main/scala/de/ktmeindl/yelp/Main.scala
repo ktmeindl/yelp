@@ -1,7 +1,5 @@
 package de.ktmeindl.yelp
 
-import java.io._
-
 import org.apache.spark.sql.SparkSession
 import org.slf4j.LoggerFactory
 import Constants._
@@ -14,7 +12,8 @@ object Main {
 
   lazy val logger = LoggerFactory.getLogger(getClass)
   private val props = new PropertiesConfiguration()
-  props.load(PROP_FILE)
+  // set start argument -Dyelp.properties=<path to prooerties file>
+  props.load(System.getProperty(PROP_FILE, PROP_FILE))
 
 
   def main(args: Array[String]): Unit = {
