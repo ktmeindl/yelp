@@ -23,7 +23,7 @@ object TarProcessor {
 
   def untarAndStoreYelpData(props: PropertiesConfiguration, spark: SparkSession, tarFile: String): Unit = {
 
-    val dataDir = Try{props.getString(DATA_DIR)}.toOption match {
+    val dataDir = Option(props.getString(DATA_DIR)) match {
       case Some(s) => new File(s)
       case None => {
         isTmpDir = true
