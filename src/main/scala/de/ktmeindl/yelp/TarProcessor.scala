@@ -11,9 +11,6 @@ import org.apache.commons.io.FileUtils
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.slf4j.LoggerFactory
 
-import scala.util.Try
-
-
 object TarProcessor {
 
   lazy val logger = LoggerFactory.getLogger(getClass)
@@ -22,9 +19,11 @@ object TarProcessor {
   //========================================== Resolving the tar file and store in distributed storage ==============
 
   def untarAndStoreYelpData(props: PropertiesConfiguration, spark: SparkSession, tarFile: String): Unit = {
-
-    val dataDir = Option(props.getString(DATA_DIR)) match {
-      case Some(s) => new File(s)
+    val dataDir = Option[String](props.getString(DATA_DIR)) match {
+      case Some(s) => {
+        logger.debug(s"Working in directory ${s}")
+        new File(s)
+      }
       case None => {
         isTmpDir = true
         val tmpDirPath = Files.createTempDirectory(UUID.randomUUID().toString).toFile
