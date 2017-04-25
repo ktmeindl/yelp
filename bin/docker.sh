@@ -14,13 +14,19 @@ fi
 function copy_elements {
     rm -rf $(dirname $0)/../docker/conf
     rm -rf $(dirname $0)/../docker/lib
+    rm -rf $(dirname $0)/../docker/bin
     mkdir $(dirname $0)/../docker/conf
     mkdir $(dirname $0)/../docker/lib
+    mkdir $(dirname $0)/../docker/bin
+
 
     cp $(dirname $0)/../conf/yelp-defaults.properties $(dirname $0)/../docker/conf/yelp.properties
     cp $(dirname $0)/../conf/log4j.properties $(dirname $0)/../docker/conf
     cp $(dirname $0)/../conf/spark-defaults.conf $(dirname $0)/../docker/conf
+
     cp $(dirname $0)/../target/yelp-1.0.0.jar $(dirname $0)/../docker/lib
+
+    cp $(dirname $0)/submit.sh $(dirname $0)/../docker/bin
 }
 
 function build_docker {
