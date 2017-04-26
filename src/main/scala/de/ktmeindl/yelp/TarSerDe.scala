@@ -38,6 +38,7 @@ object TarSerDe {
       var entry = tar.getNextTarEntry
       while (entry != null) {
         val outputFile = new File(output, entry.getName)
+        logger.debug(s"Untar entry ${entry.getName} to file ${outputFile.getAbsolutePath}")
         if (entry.isDirectory) {
           Files.createDirectory(outputFile.toPath)
         } else {

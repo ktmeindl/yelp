@@ -123,7 +123,7 @@ object DataStorage {
   }
 
   def readLocalFile(spark: SparkSession, dataDir: File, file: String): DataFrame = {
-    readJson(spark, "file:///" + new File(dataDir, file).getAbsolutePath)
+    readJson(spark, "file://" + new File(dataDir, file).getAbsolutePath)
   }
 
 
