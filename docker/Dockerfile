@@ -13,5 +13,7 @@ RUN mkdir /yelp/data
 
 # Copy Spark config
 RUN cp /yelp/conf/spark-defaults.conf /opt/spark/dist/conf
+RUN cp /yelp/conf/hdfs-site.xml /opt/spark/dist/conf
+RUN cp /yelp/conf/core-site.xml /opt/spark/dist/conf
 
 

@@ -59,7 +59,7 @@ object DataStorage {
     )
   }
 
-  private def getHdfsInstances(hdfsDir: String) = {
+  def getHdfsInstances(hdfsDir: String) = {
     val storage = HDFSStorage(hdfsDir)
     Seq(
       DataInstance(CHECKIN, storage, FILE_CHECKIN, Seq(COL_BUSINESS_ID), false),
@@ -127,7 +127,7 @@ object DataStorage {
   }
 
 
-  private def readJson(spark: SparkSession, location: String): DataFrame = {
+  def readJson(spark: SparkSession, location: String): DataFrame = {
     logger.debug(s"Reading json data from ${location}")
     spark.read.json(location)
   }

@@ -24,6 +24,8 @@ function copy_elements {
     cp $(dirname $0)/../conf/yelp-defaults.properties $(dirname $0)/../docker/conf/yelp.properties
     cp $(dirname $0)/../conf/log4j.properties $(dirname $0)/../docker/conf
     cp $(dirname $0)/../conf/spark-defaults.conf $(dirname $0)/../docker/conf
+    cp $(dirname $0)/../conf/hdfs-site.xml $(dirname $0)/../docker/conf
+    cp $(dirname $0)/../conf/core-site.xml $(dirname $0)/../docker/conf
 
     # Scripts
     cp $(dirname $0)/submit.sh $(dirname $0)/../docker/bin

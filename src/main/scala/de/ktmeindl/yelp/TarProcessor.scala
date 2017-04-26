@@ -8,6 +8,7 @@ import de.ktmeindl.yelp.Constants._
 import de.ktmeindl.yelp.DataStorage._
 import org.apache.commons.configuration.PropertiesConfiguration
 import org.apache.commons.io.FileUtils
+import org.apache.hadoop.fs.FileSystem
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.slf4j.LoggerFactory
 
@@ -19,40 +20,42 @@ object TarProcessor {
   //========================================== Resolving the tar file and store in distributed storage ==============
 
   def untarAndStoreYelpData(props: PropertiesConfiguration, spark: SparkSession, tarFile: String): Unit = {
+    val fs: FileSystem = org.apache.hadoop.fs.FileSystem.get(spark.sparkContext.hadoopConfiguration)
     val dataDir = Option[String](props.getString(DATA_DIR)) match {
       case Some(s) => {
         logger.debug(s"Working in directory ${s}")
-        new File(s)
+        s
       }
       case None => {
         isTmpDir = true
-        val tmpDirPath = Files.createTempDirectory(UUID.randomUUID().toString).toFile
-        logger.debug(s"Working in tmp directory ${tmpDirPath.getAbsolutePath}")
+        val tmpDirPath = s"/tmp/${UUID.randomUUID().toString}"
+        logger.debug(s"Working in tmp directory ${tmpDirPath}")
         tmpDirPath
       }
     }
     try {
       if (props.getBoolean(SHOULD_UNTAR, true)) {
-        TarSerDe.untarToLocalFS(spark.sparkContext, tarFile, dataDir)
+        TarSerDe.untarToHdfs(spark.sparkContext, tarFile, dataDir, fs)
       }
-      logger.info(s"Reading in data from ${dataDir.getAbsolutePath}")
-      val localInstances = getLocalInstances(dataDir)                   // this is where the extracted data is stored
+
+      logger.info(s"Reading in data from ${dataDir}")
+      val localInstances = getHdfsInstances(dataDir)                   // this is where the extracted data is stored
       val remoteInstances = getInstancesFromProps(props)                // this is where the data should be loaded to
       storeUntarredData(props, spark, localInstances, remoteInstances)
     } finally {
-      if (isTmpDir) FileUtils.forceDelete(dataDir)
+      if (isTmpDir) fs.delete(new org.apache.hadoop.fs.Path(dataDir), true)
     }
   }
 
   def storeUntarredData(props: PropertiesConfiguration, spark: SparkSession,
-                        localInstances: Seq[DataInstance], remoteInstances: Seq[DataInstance]) = {
-    val localInstancesMap = localInstances.map(instance => instance.name -> instance).toMap
+                        dataInstances: Seq[DataInstance], remoteInstances: Seq[DataInstance]) = {
+    val dataInstanceMap = dataInstances.map(instance => instance.name -> instance).toMap
     // remoteInstances are all of the same type, hence the check of the first storage type suffices
     remoteInstances.head.storage match {
       case FileStorage(_)             => null       // nothing to do
       case CassandraStorage(keyspace) => storeJsonFilesInCassandra(props, spark, remoteInstances,
-        localInstancesMap, keyspace)
-      case HDFSStorage(dir)           => storeJsonFilesInHdfs(spark, remoteInstances, localInstancesMap, dir)
+        dataInstanceMap, keyspace)
+      case HDFSStorage(dir)           => storeJsonFilesInHdfs(spark, remoteInstances, dataInstanceMap, dir)
       case x: DataStorage             => throw new Exception(s"Unknown storage type '${x}'! Can't store the data there. ")
     }
   }
@@ -63,16 +66,16 @@ object TarProcessor {
   private def storeJsonFilesInCassandra(props: PropertiesConfiguration,
                                         spark: SparkSession,
                                         remoteInstances: Seq[DataInstance],
-                                        localInstancesMap: Map[String, DataInstance],
+                                        dataInstances: Map[String, DataInstance],
                                         keyspace: String) = {
     val client = CassandraClient(props)
     try {
       remoteInstances.foreach(instance => {
-        val localInstance = localInstancesMap(instance.name)
+        val localInstance = dataInstances(instance.name)
         storeJsonFileInCassandra(
           client,
           spark,
-          localInstance.storage.asInstanceOf[FileStorage].dir,
+          localInstance.storage.asInstanceOf[HDFSStorage].dir,
           localInstance.instanceName,
           keyspace,
           instance.instanceName,
@@ -98,13 +101,13 @@ object TarProcessor {
     */
   private def storeJsonFileInCassandra(client: CassandraClient,
                                        spark: SparkSession,
-                                       dataDir: File,
+                                       dataDir: String,
                                        filename: String,
                                        keyspace: String,
                                        table: String,
                                        key: Seq[String],
                                        keyIsUnique: Boolean = true) : DataFrame = {
-    val dfIn = readLocalFile(spark, dataDir, filename)
+    val dfIn = readJson(spark, getHdfsFile(dataDir, filename))
 
     val (df, primaryKey) = keyIsUnique match {
       case false => (dfIn.withColumn(COL_UUID, generateUUID()), key ++ Seq(COL_UUID))
@@ -123,7 +126,7 @@ object TarProcessor {
       val localInstance = localInstancesMap(instance.name)
       storeJsonFileInHDFS(
         spark,
-        localInstance.storage.asInstanceOf[FileStorage].dir,
+        localInstance.storage.asInstanceOf[HDFSStorage].dir,
         localInstance.instanceName,
         dir,
         instance.instanceName)
@@ -138,8 +141,8 @@ object TarProcessor {
     * @param hdfsDir      Directory in HDFS where to put the data
     * @param hdfsFile     Filename of Json in HDFS, within the directory
     */
-  def storeJsonFileInHDFS(spark: SparkSession, dataDir: File, filename: String, hdfsDir: String, hdfsFile: String) = {
-    val df = readLocalFile(spark, dataDir, filename)
+  def storeJsonFileInHDFS(spark: SparkSession, dataDir: String, filename: String, hdfsDir: String, hdfsFile: String) = {
+    val df = readJson(spark, getHdfsFile(dataDir, filename))
     writeJson(df, getHdfsFile(hdfsDir, hdfsFile))
   }
 
