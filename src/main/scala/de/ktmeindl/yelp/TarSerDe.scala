@@ -26,6 +26,12 @@ object TarSerDe {
       val is = tarFile._2.open
       untar(is, output)
     })
+
+    //DEBUG TODO REMOVE
+    val listOfFiles: Array[File] = outputDir.listFiles()
+    for (entry <- listOfFiles) {
+      logger.debug(s"Entry in ${outputDir.getAbsolutePath}: ${entry.getAbsolutePath}")
+    }
   }
 
   /**

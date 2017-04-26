@@ -5,8 +5,8 @@ This application analyses the public yelp dataset, round 9 (https://www.yelp.com
 In the first step it extracts the provided tar-file, parses the contained Json files and stores the outcome in a
 scalable data store such as Cassandra or HDFS. After that, some basic Joins and Selects are executed to further analyse
 the content of the data.
-This application is based on the SMACK stack and developed on DC/OS, it should ideally be executed on a basic
-DC/OS AWS instance with the default versions of Cassandra and Spark applications installed.
+This application is based on the SMACK stack and developed on DC/OS, it should ideally be executed on a [basic
+DC/OS AWS instance](https://dcos.io/docs/1.9/installing/cloud/aws/basic/) with the default versions of Cassandra and Spark applications installed.
 
 ## Getting started
 Start with checking out this git project or simply download the marathon json file, the applicatoin itself is provided
