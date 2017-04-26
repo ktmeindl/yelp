@@ -37,3 +37,38 @@ There are two ways to create a custom version of this app:
 1. Check out the git project and create your own docker container
 2. Download the docker container, adapt it and upload your own version
 
+
+### 1. Build docker image from git cone
+There is a script provided to create the default docker build from this git repository - before that of course
+a maven build is required:
+
+```
+mvn clean package
+sh bin/docker.sh <your docker image name in the form username/image:tag>
+```
+
+This script copies some libraries and configuration files into a template Spark image and creates a new one.
+In order to customize the build, you must change the following files:
+
+1. The script that prepares and executes the docker build bin/docker.sh
+2. The configuration files in conf/ in order to customize the build for you:
+ - log4j.properties for logger settings
+ - spark-defaults.conf for the configuration of the spark job
+ - yelp-defaults.properties for yelp settings (Be aware that this file will be published, so take care that it contains no sensitive information!)
+3. The docker build file docker/Dockerfile
+
+After the configuration is adapted according to your requirements, the image can be pushed to your docker account:
+
+```
+docker run -it
+docker push <your docker image name in the form username/image:tag>
+```
+
+### 2. Adapt docker image from docker repo
+
+You can also use the docker image as a basis for your own dockerfile:
+
+```
+FROM ktmeindl/yelp:1.0.0
+RUN ...
+```
