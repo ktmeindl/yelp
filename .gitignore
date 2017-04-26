@@ -9,3 +9,4 @@ log/*
 docker/conf
 docker/lib
 docker/bin
+conf/yelp-app.json

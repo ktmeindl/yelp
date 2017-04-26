@@ -13,11 +13,7 @@ YELP_DRIVER_JAVA_OPTIONS="-Dlog4j.configuration=file:/yelp/conf/log4j.properties
     --master mesos://leader.mesos:5050 \
     --class de.ktmeindl.yelp.Main \
     --driver-java-options "${YELP_DRIVER_JAVA_OPTIONS}" \
-    --executor-memory 1g \
-    --executor-cores 2 \
-    --conf spark.mesos.coarse=true \
-    --conf spark.cores.max=4 \
-    --conf spark.mesos.executor.docker.image=ktmeindl/yelp:1.0.0 \
+    --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.1 \
     /yelp/lib/yelp-1.0.0.jar ${TAR_FILE}
 
 

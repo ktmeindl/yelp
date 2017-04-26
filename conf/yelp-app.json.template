@@ -1,0 +1,23 @@
+{
+  "id": "spark-test",
+  "run": {
+    "cpus": 2,
+    "mem": 2048,
+    "disk": 0,
+    "cmd": "/opt/spark/dist/bin/spark-submit --master mesos://leader.mesos:5050 --class de.ktmeindl.yelp.Main --driver-java-options \"-Dlog4j.configuration=file:/yelp/conf/log4j.properties -Dyelp.properties=file:/yelp/conf/yelp.properties\" --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.1 /yelp/lib/yelp-1.0.0.jar <path-to-tar-file>",
+    "env": {},
+    "placement": {
+      "constraints": []
+    },
+    "artifacts": [],
+    "maxLaunchDelay": 3600,
+    "docker": {
+      "image": "ktmeindl/yelp:1.0.0"
+    },
+    "volumes": [],
+    "restart": {
+      "policy": "NEVER"
+    }
+  },
+  "schedules": []
+}
