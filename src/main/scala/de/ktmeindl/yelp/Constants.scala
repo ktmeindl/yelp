@@ -26,6 +26,9 @@ object Constants {
   val COL_USER_ID             = "user_id"
   val COL_TIME                = "time"
   val COL_UUID : String       = "key_uuid"
+  val COL_CITY                = "city"
+  val COL_STARS               = "stars"
+  val COL_NAME                = "name"
 
 
   // possible storage types

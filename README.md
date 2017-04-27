@@ -1,4 +1,4 @@
-# Yelp Dataset Analysis with the SMACK stack
+# Yelp Dataset Analysis using the SMACK stack
 
 ## Overview
 This application analyses the public yelp dataset, round 9 (https://www.yelp.com/dataset_challenge).
@@ -7,7 +7,8 @@ In the first step it extracts the provided tar-file, parses the contained json f
 After that, some basic joins and selects are executed to further analyse the content of the data.
 
 This application is based on the SMACK stack and developed on DC/OS, it should ideally be executed on a [basic
-DC/OS AWS instance](https://dcos.io/docs/1.9/installing/cloud/aws/basic/) with the default deployments of Cassandra, beta-HDFS and Spark applications installed.
+DC/OS AWS instance](https://dcos.io/docs/1.9/installing/cloud/aws/basic/) with the default
+deployments of Cassandra, beta-HDFS and Spark.
 
 ## Getting started
 The Yelp application is provided in the docker container 'ktmeindl/yelp:1.0.0' and can be executed with the job json file conf/yelp-app.json.templatewith default settings
@@ -26,11 +27,12 @@ dcos job add conf/yelp-app.json
 Alternately, you can also directly add a new job in the DC/OS web interface via copying the json content of the job config file.
 
 The job can then be started in the DC/OS web interface under "jobs" -> "yelp-app" -> "Run now".
-The output of the program can then be seen in the logs section.
+
+The output of the program can be seen in the logs section.
 
 ### Storing the tar file in S3
 
-I used s3 to store the Yelp tar-file. If you want to do the same, you have to add the following
+I used s3 to store the Yelp tar-file. If you want to do the same, you can do this via adding the following
 parameters to the driver-java-options in the start command of the job json before you submit it:
 ```
 -Ds3.aws.endpoint=<your s3 endpoint>
@@ -47,7 +49,7 @@ part of the application, you can also set the following driver-java-option to av
 
 
 ## Setup
-There are two ways to create a custom version of this app:
+There are two ways to create a custom version of this application:
 
 1. Check out the git project and create your own docker container based on this git repository
 2. Create a new docker container based on ktmeindl/yelp:1.0.0
@@ -71,7 +73,8 @@ In order to customize the build, you must change the following files:
     - log4j.properties for logger settings
     - spark-defaults.conf for the configuration of the spark job
     - yelp-defaults.properties for yelp settings
-3. The docker build file docker/Dockerfile
+3. The value of spark.mesos.executor.docker.image in the configuration of the spark job conf/spark-defaults.conf
+4. The docker build file docker/Dockerfile
 
 After the configuration is adapted and the image was created according to your requirements, it can be pushed to your docker account:
 
@@ -158,4 +161,20 @@ To access the Cassandra CQL-SH, execute the following commands:
 ```
 dcos node ssh --master-proxy --mesos-id leader
 docker run -ti cassandra:3.0.10 cqlsh <cassandra host>
+```
+
+### Spark
+The Cassandra data can be accessed with the Spark shell on an agent node via:
+
+```
+docker run -it mesosphere/spark:1.0.9-2.1.0-1-hadoop-2.6
+./bin/spark-shell --master mesos://leader.mesos:5050 \
+    --conf spark.mesos.executor.docker.image=mesosphere/spark:1.0.9-2.1.0-1-hadoop-2.6 \
+    --conf spark.mesos.executor.home=/opt/spark/dist \
+    --packages datastax:spark-cassandra-connector:2.0.1-s_2.11 \
+    --conf spark.cassandra.connection.host=node-0.cassandra.mesos,node-1.cassandra.mesos,node-2.cassandra.mesos
+
+# in the Spark shell data can be read in via:
+val df = spark.read.format("org.apache.spark.sql.cassandra").options(Map( "table" -> table, "keyspace" -> keyspace)).load
+
 ```

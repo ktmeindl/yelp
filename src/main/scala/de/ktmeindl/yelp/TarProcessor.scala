@@ -39,9 +39,9 @@ object TarProcessor {
       }
 
       logger.info(s"Reading in data from ${dataDir}")
-      val localInstances = getHdfsInstances(dataDir)                   // this is where the extracted data is stored
-      val remoteInstances = getInstancesFromProps(props)                // this is where the data should be loaded to
-      storeUntarredData(props, spark, localInstances, remoteInstances)
+      val stageInstances = getHdfsInstances(dataDir)                    // this is where the extracted data is staged
+      val targetInstances = getInstancesFromProps(props)                // this is where the data should be loaded to
+      storeUntarredData(props, spark, stageInstances, targetInstances)
     } finally {
       if (isTmpDir) fs.delete(new org.apache.hadoop.fs.Path(dataDir), true)
     }
