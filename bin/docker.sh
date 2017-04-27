@@ -30,9 +30,10 @@ function copy_elements {
     # Scripts
     cp $(dirname $0)/submit.sh $(dirname $0)/../docker/bin
 
-    # Libraries
+    # Application jar
     cp $(dirname $0)/../target/yelp-1.0.0.jar $(dirname $0)/../docker/lib
-    ## Providing some extra libraries required for s3
+
+    ## Providing some extra libraries for the classpath
     cp ~/.m2/repository/net/java/dev/jets3t/jets3t/0.9.4/jets3t-0.9.4.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/org/apache/hadoop/hadoop-aws/2.6.0/hadoop-aws-2.6.0.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar $(dirname $0)/../docker/lib

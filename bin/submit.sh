@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 ## Input parameter: <path to tar-file containing yelp data>
+## Attention: this script is work in progress and not tested
 
 TAR_FILE=$1
 if [ -z "${TAR_FILE}" ]; then
@@ -13,7 +14,6 @@ YELP_DRIVER_JAVA_OPTIONS="-Dlog4j.configuration=file:/yelp/conf/log4j.properties
     --master mesos://leader.mesos:5050 \
     --class de.ktmeindl.yelp.Main \
     --driver-java-options "${YELP_DRIVER_JAVA_OPTIONS}" \
-    --packages com.datastax.spark:spark-cassandra-connector_2.11:2.0.1 \
     /yelp/lib/yelp-1.0.0.jar ${TAR_FILE}
 
 
