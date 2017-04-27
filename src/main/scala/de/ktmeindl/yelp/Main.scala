@@ -78,7 +78,7 @@ object Main {
         val checkinDF = tables(CHECKIN)
         val reviewDF = tables(REVIEW)
 
-        println("Starting the analysis of the yelp dataset.\n")
+        println("\n\nStarting the analysis of the yelp dataset.\n")
         println(s"The dataset contains businesses from ${businessDF.select(col(COL_CITY)).distinct.count} cities. " +
           s"They add up from the following (showing top 10):")
         val col_business_per_city = "nr_businesses"
@@ -94,7 +94,7 @@ object Main {
           .where(col(col_business_per_city) === lit(maxValue))
           .head.getAs[String](COL_CITY)
 
-        println(s"The city with the most businesses is ${cityMost}")
+        println(s"The city with the most businesses is ${cityMost}.\n")
 
         println(s"The following users enjoyed their stays in ${cityMost} most based on the given ratings (showing top 10 ratings for users with more than 5 given reviews in the city):")
         val dfUsersBusinesses = businessDF.where(col(COL_CITY).as("a") === lit(cityMost))
