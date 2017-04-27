@@ -41,9 +41,8 @@ object DataStorage {
   //========================================== Extract data storage information from properties ====================
 
   def getInstancesFromProps(props: PropertiesConfiguration) : Seq[DataInstance] = {
-    props.getString(STORAGE_TYPE).toLowerCase match {
+    props.getString(STORAGE_TYPE, TYPE_CASSANDRA).toLowerCase match {
       case TYPE_CASSANDRA   => getCassandraInstances(props)
-      case TYPE_HDFS        => getHdfsInstances(props.getString(HDFS_DIR))
       case TYPE_FILE        => getLocalInstances(new File(props.getString(DATA_DIR)))
     }
   }

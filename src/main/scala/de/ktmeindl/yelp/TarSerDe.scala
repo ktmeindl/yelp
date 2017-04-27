@@ -15,6 +15,7 @@ object TarSerDe {
 
   lazy val logger = LoggerFactory.getLogger(getClass)
 
+
   /**
     * Untar an input stream of a tar-file to an output directory in local FS using Spark for the input stream
     */
@@ -38,6 +39,7 @@ object TarSerDe {
       untarHdfs(is, output, fs)
     })
   }
+
 
   /**
     * Untar an input stream of a tar-file to an output directory in local FS

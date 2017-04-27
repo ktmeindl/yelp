@@ -1,13 +1,10 @@
 package de.ktmeindl.yelp
 
-import java.io.File
-import java.nio.file.Files
 import java.util.UUID
 
 import de.ktmeindl.yelp.Constants._
 import de.ktmeindl.yelp.DataStorage._
 import org.apache.commons.configuration.PropertiesConfiguration
-import org.apache.commons.io.FileUtils
 import org.apache.hadoop.fs.FileSystem
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.slf4j.LoggerFactory
@@ -19,7 +16,10 @@ object TarProcessor {
 
   //========================================== Resolving the tar file and store in distributed storage ==============
 
-  def untarAndStoreYelpData(props: PropertiesConfiguration, spark: SparkSession, tarFile: String): Unit = {
+  def storeYelpData(props: PropertiesConfiguration, spark: SparkSession): Unit = {
+    untarAndStoreYelpData(props, spark, "", false)
+  }
+  def untarAndStoreYelpData(props: PropertiesConfiguration, spark: SparkSession, tarFile: String, shouldUntar: Boolean = true): Unit = {
     val fs: FileSystem = org.apache.hadoop.fs.FileSystem.get(spark.sparkContext.hadoopConfiguration)
     val dataDir = Option[String](props.getString(DATA_DIR)) match {
       case Some(s) => {
@@ -34,7 +34,7 @@ object TarProcessor {
       }
     }
     try {
-      if (props.getBoolean(SHOULD_UNTAR, true)) {
+      if (shouldUntar) {
         TarSerDe.untarToHdfs(spark.sparkContext, tarFile, dataDir, fs)
       }
 

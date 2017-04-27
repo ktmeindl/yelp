@@ -28,6 +28,7 @@
         <hadoop.version>2.6.0</hadoop.version>
         <jackson.version>2.6.5</jackson.version>
         <jets3t.version>0.9.4</jets3t.version>
+        <commons.compress.version>1.4</commons.compress.version>
 
     </properties>
 
@@ -130,11 +131,6 @@
             <artifactId>spark-cassandra-connector_2.11</artifactId>
             <version>${spark.connector.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.datastax.cassandra</groupId>
-            <artifactId>cassandra-driver-core</artifactId>
-            <version>${cassandra.driver.version}</version>
-        </dependency>
 
         <!-- Classpath adaptions for read/write with S3 -->
         <dependency>
@@ -180,10 +176,8 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.4</version>
+            <version>${commons.compress.version}</version>
         </dependency>
-
-
 
     </dependencies>
 </project>

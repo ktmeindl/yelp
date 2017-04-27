@@ -36,9 +36,10 @@ function copy_elements {
     cp ~/.m2/repository/net/java/dev/jets3t/jets3t/0.9.4/jets3t-0.9.4.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/org/apache/hadoop/hadoop-aws/2.6.0/hadoop-aws-2.6.0.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar $(dirname $0)/../docker/lib
-    cp ~/.m2/repository/com/datastax/cassandra/cassandra-driver-core/3.0.0/cassandra-driver-core-3.0.0.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/com/datastax/spark/spark-cassandra-connector_2.11/2.0.1/spark-cassandra-connector_2.11-2.0.1.jar $(dirname $0)/../docker/lib
     cp ~/.m2/repository/com/google/guava/guava/16.0.1/guava-16.0.1.jar $(dirname $0)/../docker/lib
+    cp ~/.m2/repository/com/twitter/jsr166e/1.1.0/jsr166e-1.1.0.jar $(dirname $0)/../docker/lib
+
 }
 
 function build_docker {

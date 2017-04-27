@@ -39,7 +39,6 @@ object Constants {
   val DATA_DIR                = "untarred.files.dir"
   val STORAGE_TYPE            = "storage.type"
   val CASSANDRA_HOSTS         = "cassandra.hosts"
-  val HDFS_DIR                = "hdfs.dir"
 
   // cassandra keyspace and name
   val C_KEYSPACE              = "cassandra.keyspace"

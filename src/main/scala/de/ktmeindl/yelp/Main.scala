@@ -12,7 +12,7 @@ object Main {
 
   lazy val logger = LoggerFactory.getLogger(getClass)
   private val props = new PropertiesConfiguration()
-  // set start argument -Dyelp.properties=<path to prooerties file>
+  // set start argument -Dyelp.properties=<path to properties file>
   props.load(System.getProperty(PROP_FILE, PROP_FILE))
 
 
@@ -20,8 +20,6 @@ object Main {
     logger.debug("Initializing SparkSession")
 
     val sparkBuilder = SparkSession.builder()
-      .appName("Yelp_dataset_challenge")
-//      .master("local[*]")
 
     // setting necessary cassandra connection details
     if(props.getString(STORAGE_TYPE).equals(TYPE_CASSANDRA)){
@@ -31,7 +29,9 @@ object Main {
     val spark = sparkBuilder.getOrCreate()
     logger.debug("SparkSession initialized")
 
-    args.length match {
+    val shouldUntar = System.getProperty(SHOULD_UNTAR, s"${props.getBoolean(SHOULD_UNTAR, true)}").toBoolean
+    if(shouldUntar){
+      args.length match {
         case 0 => logger.warn("Missing program argument. Usage: <path to tar-file>. Skipping the tar-file-handling..")
         case _ => {
           val tarFile = args(0)
@@ -42,9 +42,14 @@ object Main {
             conf.set("fs.s3a.awsSecretAccessKey", props.getString(S3_KEY, System.getProperty(S3_KEY)))
             conf.set("fs.s3a.endpoint",           props.getString(S3_ENDPOINT, System.getProperty(S3_ENDPOINT)))
           }
-          TarProcessor.untarAndStoreYelpData(props, spark, tarFile)
+          TarProcessor.untarAndStoreYelpData(props, spark, tarFile, true)
         }
       }
+    } else {
+      logger.info("Untar of files is not required due to configuration.")
+      TarProcessor.storeYelpData(props, spark)
+    }
+
 
     DataStorage.loadYelpData(spark, props) match {
       case Failure(ex) => {
